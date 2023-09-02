@@ -1,3 +1,4 @@
+require('dotenv').config();
 //import { JSONEncodable } from 'discord.js';
 
 
@@ -23,7 +24,9 @@ client.on('ready', (c) => {
 })
 
 client.on('messageCreate', (message) => {
-    console.log(message);
+    if (message.content === 'Summon Bot' ){
+        message.reply('I have been Sumooooned!');
+    }
 })
 
-client.login('MTE0NjUyNDg4MjU3MDU3NjAyMw.Gtd5Ic.J1oCvCILqs7X-EHDLanux94zEpri5IlmOn0MPA');
+client.login(process.env.TOKEN);
