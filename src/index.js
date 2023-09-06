@@ -15,18 +15,28 @@ const client = new Client({
     ]
 });
 
-//var jsonObj = JSON.parse(token.json);
 
-//var token = alert(jsonObj.token);
 
 client.on('ready', (c) => {
     console.log(`${c.user.username} is online`);
-})
+});
 
 client.on('messageCreate', (message) => {
     if (message.content === 'Summon Bot' ){
         message.reply('I have been Sumooooned!');
     }
-})
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === 'hey'){
+        interaction.reply('hey!');
+    }
+    if (interaction.commandName === 'ping'){
+        interaction.reply('pong');
+    }
+});
+
 
 client.login(process.env.TOKEN);
