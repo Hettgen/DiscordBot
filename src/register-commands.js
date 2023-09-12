@@ -34,6 +34,10 @@ const commands = [
                 required: true,
             }
         ]
+    },
+    {
+        name : "d20",
+        description: 'rolls d20 dice',
     }
 ];
 

@@ -37,6 +37,10 @@ client.on('interactionCreate', (interaction) => {
         interaction.reply(`The sum is ${num1 + num2}`);
 
     }
+    
+    if (interaction.commandName === 'd20'){
+        interaction.reply(`${Math.floor(Math.random() * 21)}`);
+    }
 });
 
 
