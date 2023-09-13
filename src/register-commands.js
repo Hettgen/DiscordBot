@@ -34,7 +34,12 @@ const commands = [
                 required: true,
             }
         ]
-    }
+    },
+    {
+        name : 'embed',
+        description : 'test embed for book club',
+
+    },
 ];
 
 const rest = new REST({version: '10'}).setToken(process.env.TOKEN);

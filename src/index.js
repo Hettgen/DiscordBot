@@ -2,7 +2,7 @@ require('dotenv').config();
 //import { JSONEncodable } from 'discord.js';
 
 
-const {Client, IntentsBitField} = require('discord.js');
+const { Client, IntentsBitField, EmbedBuilder } = require('discord.js');
 
 
 const client = new Client({
@@ -36,6 +36,12 @@ client.on('interactionCreate', (interaction) => {
 
         interaction.reply(`The sum is ${num1 + num2}`);
 
+    }
+
+    if (interaction.commandName === 'embed') {
+        const embed = new EmbedBuilder().setTitle("Book Club").setDescription("Monthly book club back at it again!");
+
+        interaction.reply({embeds: [embed]});
     }
 });
 
