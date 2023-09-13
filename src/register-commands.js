@@ -36,10 +36,9 @@ const commands = [
         ]
     },
     {
-        name : 'embed',
-        description : 'test embed for book club',
-
-    },
+        name : "d20",
+        description: 'rolls d20 dice',
+    }
 ];
 
 const rest = new REST({version: '10'}).setToken(process.env.TOKEN);
