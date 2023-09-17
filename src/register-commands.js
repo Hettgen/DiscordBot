@@ -36,8 +36,12 @@ const commands = [
         ]
     },
     {
-        name : "d20",
+        name : 'd20',
         description: 'rolls d20 dice',
+    },
+    {
+        name : 'embed',
+        description : 'Embed test for treehouse book club',
     }
 ];
 
