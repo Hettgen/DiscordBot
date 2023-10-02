@@ -12,9 +12,7 @@ const client = new Client({
   ],
 });
 
-client.on("ready", (c) => {
-  console.log(`${c.user.username} is online`);
-});
+
 
 client.on("messageCreate", (message) => {
   if (message.content === "Summon Bot") {
@@ -22,8 +20,9 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.on("interactionCreate", (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+// Command Listener
+client.on("interactionCreate", async (interaction) => {
+  //if (interaction.isChatInputCommand()) return;
 
   if (interaction.commandName === "add") {
     const num1 = interaction.options.get("first-number").value;
@@ -40,19 +39,51 @@ client.on("interactionCreate", (interaction) => {
     const embed = new EmbedBuilder()
       .setTitle("Book Club")
       .setDescription("Monthly book club back at it again!")
-      .setColor('Red')
-      .addFields({
-        name: 'Name',
-        value: 'Bookname', 
-        inline: true,
+      .setColor("Red")
+      .addFields(
+        {
+          name: "Name",
+          value: "Bookname",
+          inline: true,
+        },
+        {
+          name: "Book Description",
+          value: "Book description",
+          inline: true,
+        }
+      );
 
-      },{
-        name: 'Book Description',
-        value: 'Book description', 
-        inline: true,
-      })
+    interaction.reply({ embeds: [embed] });
+  }
 
-      interaction.reply({ embeds: [embed]});
+  if(interaction.commandName === 'register'){
+    setRoles();
+  }
+
+  try {
+    if (interaction.isButton()) {
+      await interaction.deferReply({ ephemeral: true });
+      const role = interaction.guild.roles.cache.get(interaction.customId);
+      if (!role) {
+        interaction.edit({
+          content: "I couldnt find that role",
+        });
+        return;
+      }
+  
+      const hasRole = interaction.member.roles.cache.has(role.id);
+  
+      if (hasRole){
+        await interaction.member.roles.remove(role);
+        await interaction.editReply(`The role ${role} has been removed.`);
+        return;
+      }
+  
+      await interaction.member.roles.add(role);
+      await interaction.editReply(`The role ${role} has been added.`);
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 
