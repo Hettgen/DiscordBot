@@ -18,7 +18,7 @@ const client = new Client({
     IntentsBitField.Flags.MessageContent,
   ],
 });
-
+/*
 async function setRoles(){
     try {
         const channel = await client.channels.cache.get('1150933925514981439');
@@ -44,6 +44,8 @@ async function setRoles(){
         console.log(error);
       }
 }
+*/
+
 /*
 client.on("ready", async (c) => {
 
