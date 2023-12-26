@@ -11,7 +11,7 @@ const commands = [
                 name: 'first-number',
                 description: 'The first number.',
                 type: ApplicationCommandOptionType.Number,
-              /*choices: [
+              choices: [
                     {
                         name : 'one',
                         value : 1,
@@ -24,7 +24,7 @@ const commands = [
                         name : 'three',
                         value : 3,
                     },
-                ], */
+                ], 
                 required: true,
             },
             {
@@ -38,10 +38,19 @@ const commands = [
     {
         name : "d20",
         description: 'rolls d20 dice',
+    },
+    {
+      name : "bookclub",
+      description : 'bookclub embed for voting and proposing books'
+    },
+    {
+      name : 'bookvote',
+      description : 'search for book and vote on it'
     }
 ];
 
 const rest = new REST({version: '10'}).setToken(process.env.TOKEN);
+
 
 (async () =>{
     try {
@@ -52,6 +61,8 @@ const rest = new REST({version: '10'}).setToken(process.env.TOKEN);
             {body: commands}
         );
         console.log('Slash commands registered successfully.');
+
+
 
     } catch (error) {
         console.log(`There was an error: ${error}`)
