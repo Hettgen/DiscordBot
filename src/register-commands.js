@@ -41,10 +41,6 @@ const commands = [
     {
       name : "bookclub",
       description : 'bookclub embed for voting and proposing books'
-    },
-    {
-      name : 'bookvote',
-      description : 'search for book and vote on it'
     }
 ];
 

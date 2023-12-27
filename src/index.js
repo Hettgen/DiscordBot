@@ -4,6 +4,7 @@ const fs = require('fs');
 const { searchBooks } = require('./utils/apiUtils');
 const bookvote = require('./commands/bookvote');
 const { handleBookSelection } = require('./utils/searchUtils');
+const cron = require('node-cron');
 
 
 
@@ -26,7 +27,9 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
-
+cron.schedule('0 0 1 * *', () => {
+  selectAndAnnounceBook();
+});
 const roles = [
   {
     id : '1153201018323095662',

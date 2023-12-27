@@ -3,6 +3,8 @@
     "axios": "^1.6.2",
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1",
+    "mongoose": "^8.0.3",
+    "node-cron": "^3.0.3",
     "nodemon": "^3.0.1"
   },
   "name": "discordbot",
