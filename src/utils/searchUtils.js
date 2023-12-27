@@ -36,7 +36,17 @@ async function handleBookSelection(interaction) {
   writeUserSubmission(userId, selectedBook.title);
   searchResultsCache.delete(userId);
 
-  await interaction.reply({ content: `You have selected the book: ${selectedBook.title}`, ephemeral: true });
+  await interaction.deferUpdate();
+
+
+  // await originalMessage.edit({
+  // content: `You have selected the book: ${selectedBook.title}`,
+  // components: [] });
+
+  await interaction.editReply({ 
+  content: `You have selected the book: ${selectedBook.title}`,
+  components: [],
+  });
 }
 
 module.exports = {
