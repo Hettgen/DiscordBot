@@ -5,6 +5,7 @@ const { searchBooks } = require('./utils/apiUtils');
 const bookvote = require('./commands/bookvote');
 const { handleBookSelection } = require('./utils/searchUtils');
 const cron = require('node-cron');
+const eventHandler = require('./handlers/eventHandler');
 
 
 
@@ -17,6 +18,8 @@ const client = new Client({
 
   ]
 });
+
+eventHandler(client);
 
 client.commands = new Collection();
 
