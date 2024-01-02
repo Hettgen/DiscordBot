@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, IntentsBitField, EmbedBuilder, ActionRowBuilder, Collection } = require('discord.js');
 const fs = require('fs');
 const { searchBooks } = require('./utils/apiUtils');
-const bookvote = require('./commands/bookvote');
+const bookvote = require('./commands/misc/bookvote');
 const { handleBookSelection } = require('./utils/searchUtils');
 const cron = require('node-cron');
 const eventHandler = require('./handlers/eventHandler');
@@ -21,14 +21,14 @@ const client = new Client({
 
 eventHandler(client);
 
-client.commands = new Collection();
+// client.commands = new Collection();
 
-const commandFiles = fs.readdirSync('src/commands').filter(file => file.endsWith('.js'));
+// const commandFiles = fs.readdirSync('src/commands').filter(file => file.endsWith('.js'));
 
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  client.commands.set(command.name, command);
-}
+// for (const file of commandFiles) {
+//   const command = require(`./commands/${file}`);
+//   client.commands.set(command.name, command);
+// }
 
 cron.schedule('0 0 1 * *', () => {
   selectAndAnnounceBook();
@@ -52,11 +52,6 @@ const roles = [
   },
 
 ]
-
-client.on('ready', (c) => {
-  console.log(`${c.user.username} is online`);
-});
-
 client.on('messageCreate', (message) => {
   if (message.content === 'Summon Bot') {
     message.reply('I have been Sumooooned!');

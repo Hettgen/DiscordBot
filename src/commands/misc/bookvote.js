@@ -1,10 +1,10 @@
 const axios = require('axios');
-const { searchBooks } = require('../utils/apiUtils');
-const { createBookSelectionMenu } = require('../utils/embedUtils');
-const { createBookSearchModal } = require('../utils/searchUtils');
-const { readUserSubmissions } = require('../utils/readWrite');
+const { searchBooks } = require('../../utils/apiUtils');
+const { createBookSelectionMenu } = require('../../utils/embedUtils');
+const { createBookSearchModal } = require('../../utils/searchUtils');
+const { readUserSubmissions } = require('../../utils/readWrite');
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
-const { searchResultsCache } = require('../utils/sharedData'); 
+const { searchResultsCache } = require('../../utils/sharedData'); 
 
 
 // Define the 'execute' function
