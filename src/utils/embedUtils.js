@@ -56,6 +56,7 @@ function createBookSelectionMenu(books) {
   const selectMenu = new StringSelectMenuBuilder()
     .setCustomId('selectBook')
     .setPlaceholder('Select a book')
+    .setCustomId('bookSelectionMenu')
     .addOptions(options.slice(0, 25)); // Limit to 25 options
 
   const row = new ActionRowBuilder().addComponents(selectMenu);

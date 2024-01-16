@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, IntentsBitField, EmbedBuilder, ActionRowBuilder, Collection } = require('discord.js');
 const fs = require('fs');
 const { searchBooks } = require('./utils/apiUtils');
-const bookvote = require('./commands/misc/bookvote');
+const bookvote = require('./handlers/bookVoteHandler');
 const { handleBookSelection } = require('./utils/searchUtils');
 const cron = require('node-cron');
 const eventHandler = require('./handlers/eventHandler');
@@ -31,7 +31,7 @@ eventHandler(client);
 // }
 
 cron.schedule('0 0 1 * *', () => {
-  selectAndAnnounceBook();
+  //selectAndAnnounceBook();
 });
 const roles = [
   {
@@ -58,56 +58,56 @@ client.on('messageCreate', (message) => {
   }
 });
 
-client.on('interactionCreate', async (interaction) => {
+// client.on('interactionCreate', async (interaction) => {
   
-  if (interaction.isChatInputCommand()){
-    const command = client.commands.get(interaction.commandName);
-    console.log(command);
+  // if (interaction.isChatInputCommand()){
+  //   const command = client.commands.get(interaction.commandName);
+  //   console.log(command);
 
-    if(!command) return;
-    try {
-      await command.execute(interaction);
-    } catch (error) {
-      console.log(error);
-      await interaction.reply({content: 'Error executing comamnd. Please message creeper', ephemeral:true});
-    }
-  }
+  //   if(!command) return;
+  //   try {
+  //     await command.execute(interaction);
+  //   } catch (error) {
+  //     console.log(error);
+  //     await interaction.reply({content: 'Error executing comamnd. Please message creeper', ephemeral:true});
+  //   }
+  // }
 
-  if (interaction.isStringSelectMenu()) {
-    if(interaction.customId === 'selectBook'){
-      await handleBookSelection(interaction);
-    }
-  }
+  // if (interaction.isStringSelectMenu()) {
+  //   if(interaction.customId === 'selectBook'){
+  //     await handleBookSelection(interaction);
+  //   }
+  // }
 
-  if (interaction.isButton()){
+  // if (interaction.isButton()){
     
     
-    if (interaction.customId === 'bookVote'){
-      const bookVoteCommand = client.commands.get('bookvote');
-        if(bookVoteCommand){
-          await bookVoteCommand.execute(interaction);
-        }
-    }
-  }
+  //   if (interaction.customId === 'bookVote'){
+  //     const bookVoteCommand = client.commands.get('bookvote');
+  //       if(bookVoteCommand){
+  //         await bookVoteCommand.execute(interaction);
+  //       }
+  //   }
+  // }
   
-  if (interaction.isModalSubmit()){
-    if(interaction.customId === 'bookSearchModal'){
-      const bookVoteCommand = client.commands.get('bookvote');
+  // if (interaction.isModalSubmit()){
+  //   if(interaction.customId === 'bookSearchModal'){
+  //     const bookVoteCommand = client.commands.get('bookvote');
 
-      if(bookVoteCommand && bookVoteCommand.handleModalSubmit){
-        try {
-          await bookVoteCommand.handleModalSubmit(interaction);
-        } catch (error) {
-          console.log(error);
-          await interaction.reply({content: 'Modal submit brokie. idk why :(', ephemeral:true});
-        }
-      }
+  //     if(bookVoteCommand && bookVoteCommand.handleModalSubmit){
+  //       try {
+  //         await bookVoteCommand.handleModalSubmit(interaction);
+  //       } catch (error) {
+  //         console.log(error);
+  //         await interaction.reply({content: 'Modal submit brokie. idk why :(', ephemeral:true});
+  //       }
+  //     }
 
-    }
-  }
+  //   }
+  // }
   
 
-});
+// });
 
 
 client.login(process.env.TOKEN);

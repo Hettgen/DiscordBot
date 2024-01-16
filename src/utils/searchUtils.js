@@ -17,11 +17,11 @@ function createBookSearchModal(){
   .addComponents(bookSearchInput);
 
   modal.addComponents(firstActionRow);
-
   return modal;
 }
 
 async function handleBookSelection(interaction) {
+  console.log('handling book selection');
   const selectedValue = interaction.values[0];
   const selectBookIndex = selectedValue.split('-')[1];
   const userId = interaction.user.id;

@@ -1,14 +1,14 @@
 const axios = require('axios');
-const { searchBooks } = require('../../utils/apiUtils');
-const { createBookSelectionMenu } = require('../../utils/embedUtils');
-const { createBookSearchModal } = require('../../utils/searchUtils');
-const { readUserSubmissions } = require('../../utils/readWrite');
+const { searchBooks } = require('../utils/apiUtils');
+const { createBookSelectionMenu } = require('../utils/embedUtils');
+const { createBookSearchModal } = require('../utils/searchUtils');
+const { readUserSubmissions } = require('../utils/readWrite');
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
-const { searchResultsCache } = require('../../utils/sharedData'); 
+const { searchResultsCache } = require('../utils/sharedData'); 
 
 
 // Define the 'execute' function
-async function execute(interaction) {
+async function handleBookVote(interaction) {
   const userId = interaction.user.id;
   const submissions = readUserSubmissions();
 
@@ -38,8 +38,6 @@ async function handleModalSubmit(interaction) {
 
 // Export the module
 module.exports = {
-  name: 'bookvote',
-  description: 'Start a book voting process.',
-  execute,
+  handleBookVote,
   handleModalSubmit
 };

@@ -1,6 +1,6 @@
 module.exports = {
   name: 'add',
-  description: 'Adds two numbers.',
+  description: 'Adds two numbers together.',
   execute(interaction) {
       const num1 = interaction.options.get('first-number').value;
       const num2 = interaction.options.get('second-number').value;
