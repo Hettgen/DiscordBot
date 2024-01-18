@@ -8,6 +8,7 @@ module.exports = async (client) => {
 
 
   try {
+    console.log('reached 01registerCommands.js')
     const localCommands = getLocalCommands();
     const applicationCommands = await getApplicationCommands(client, testServer);
 

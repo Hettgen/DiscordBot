@@ -50,7 +50,7 @@ function createBookSelectionMenu(books) {
   const options = books.map((book, index )=> ({
     label: truncateString(book.title, 100), // Truncate to fit the limit
     description: truncateString(book.author_name ? book.author_name.join(', ') : 'Unknown', 50),
-    value: `book-${index}-${truncateString(book.title,100)}` // Or any unique identifier for the book
+    value: `book-${index}-${truncateString(book.title,75)}` // Or any unique identifier for the book
   }));
 
   const selectMenu = new StringSelectMenuBuilder()

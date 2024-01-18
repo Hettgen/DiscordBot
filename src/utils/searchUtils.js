@@ -21,10 +21,11 @@ function createBookSearchModal(){
 }
 
 async function handleBookSelection(interaction) {
-  console.log('handling book selection');
+  console.log('searchUtils.js : handling book selection');
   const selectedValue = interaction.values[0];
   const selectBookIndex = selectedValue.split('-')[1];
   const userId = interaction.user.id;
+  const username = interaction.user.username;
 
   const books = searchResultsCache.get(userId);
   if(!books || !books[selectBookIndex]){
@@ -33,20 +34,31 @@ async function handleBookSelection(interaction) {
   }
 
   const selectedBook = books[selectBookIndex];
-  writeUserSubmission(userId, selectedBook.title);
-  searchResultsCache.delete(userId);
 
-  await interaction.deferUpdate();
+  try {
+    writeUserSubmission(userId, username, selectedBook.title);
+    searchResultsCache.delete(userId);
 
+    await interaction.deferUpdate();
 
+    await interaction.editReply({ 
+    content: `You have selected the book: ${selectedBook.title}`,
+    components: [],
+  });
+
+  } catch (error) {
+    console.log('error in handleBookSelection function (searchUtils.js): ', error);
+    await interaction.reply({ content: "There was an error processing your selection.", ephemeral: true });
+  }
+  
+  
+
+  
   // await originalMessage.edit({
   // content: `You have selected the book: ${selectedBook.title}`,
   // components: [] });
 
-  await interaction.editReply({ 
-  content: `You have selected the book: ${selectedBook.title}`,
-  components: [],
-  });
+  
 }
 
 module.exports = {

@@ -7,6 +7,8 @@ const { handleBookSelection } = require('./utils/searchUtils');
 const cron = require('node-cron');
 const eventHandler = require('./handlers/eventHandler');
 
+const mongoose = require('mongoose');
+
 
 
 const client = new Client({
@@ -19,7 +21,7 @@ const client = new Client({
   ]
 });
 
-eventHandler(client);
+
 
 // client.commands = new Collection();
 
@@ -52,6 +54,7 @@ const roles = [
   },
 
 ]
+
 client.on('messageCreate', (message) => {
   if (message.content === 'Summon Bot') {
     message.reply('I have been Sumooooned!');
@@ -108,6 +111,20 @@ client.on('messageCreate', (message) => {
   
 
 // });
+    eventHandler(client);
+
+
+(async () => {
+  
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, );
+    console.log('connected to database');
+
+    
+  } catch (error) {
+    console.log(error);
+  }
+})();
 
 
 client.login(process.env.TOKEN);
