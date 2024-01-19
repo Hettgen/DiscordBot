@@ -14,11 +14,37 @@ async function bookClubInfo(interaction, monthValue){
       .setLabel('Vote for your book!')
       .setStyle(ButtonStyle.Primary)
     );
-
-    interaction.reply({ embeds: [embed], components : [row] });
+    interaction.reply({ embeds: [embed], components : [row]});
   
   } catch (error) {
     console.log(error);  
+  }
+}
+
+async function roleSelector(interaction){
+  try {
+    const embed = new EmbedBuilder()
+    .setTitle('Role Selector')
+    .setDescription('Select your roles here!')
+    .addFields();
+  
+    const rowOne = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+      .setCustomId('bookClub')
+      .setLabel('Sign up for book club!')
+      .setStyle(ButtonStyle.Primary),
+  
+      new ButtonBuilder()
+      .setCustomId('bedwars')
+      .setLabel('Sign up for Bedwars!')
+      .setStyle(ButtonStyle.Primary),
+    );
+  
+    interaction.reply({ embeds: [embed], components : [rowOne]})
+  
+  } catch (error) {
+    console.log('error in roleSelector.js', error);
   }
 }
 
@@ -78,4 +104,5 @@ function truncateString(str, num) {
 module.exports = {
   bookClubInfo,
   createBookSelectionMenu,
+  roleSelector,
 };

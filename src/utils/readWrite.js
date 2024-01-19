@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { BookSubmission, User } = require('../models/schema');
+const {User, Book} = require('../models/schema');
 
 // const submissionFilePath = path.join(__dirname, 'userSubmissions.json');
 
@@ -30,6 +30,7 @@ async function writeUserSubmission(userId, username, bookName) {
     let user = await User.findOne({ userID: userId });
     if (!user) {
       user = new User({ userID: userId, username: username, submittedBooks: [bookName] });
+      addBookSubmission(bookName, userId);
     } else {
       if (!user.submittedBooks.includes(bookName)) {
         user.submittedBooks.push(bookName);
@@ -42,6 +43,7 @@ async function writeUserSubmission(userId, username, bookName) {
   }
 }
 
+// This one just reads book names and returns for display
 async function readUserSubmissions(userId) {
   try {
     const user = await User.findOne({ userID: userId });
@@ -51,13 +53,22 @@ async function readUserSubmissions(userId) {
     return [];
   }
 }
+// This one will be for finding the actual books and if they are active or not
+async function findBooksActive(userId){
+  try {
+    
+    return 
+  } catch (error) {
+    console.log('Error finding books: ', error);
+  }
+}
 
 async function addBookSubmission(bookName, userId) {
   try {
-    const bookSubmission = new BookSubmission({
-      books: [{ bookName: bookName, userID: userId, status: 'pending' }],
-      startDate: new Date().toISOString(),
-      endDate: '' // Leave empty or set a future date
+    const bookSubmission = new Book({
+      userID : userId,
+      bookName : bookName,
+      isActive : true
     });
     await bookSubmission.save();
   } catch (error) {
@@ -65,9 +76,14 @@ async function addBookSubmission(bookName, userId) {
   }
 }
 
-async function addToReadingList(userID,){
-
+async function chooseBook(userId){
+  try {
+    
+  } catch (error) {
+    console.log('Error choosing book: ', error);
+  }
 }
+
 
 
 async function hasActiveSubmission(userId) {
