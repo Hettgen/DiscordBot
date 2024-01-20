@@ -1,9 +1,5 @@
 
 
-
-
-
-
 async function assignRoles(interaction, roleId){
   try {
     const role = interaction.guild.roles.cache.get(roleId);

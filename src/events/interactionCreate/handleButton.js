@@ -1,8 +1,9 @@
 const {handleBookVote, handleModalSubmit} = require('../../handlers/bookVoteHandler');
 const {assignRoles} = require('../../handlers/roleHandler');
+const {displayBookCollection} = require('../../utils/embedUtils')
 
 const roles = [
-  {
+  { 
     id: "1153201018323095662",
     label: "Book Club",
   },
@@ -33,6 +34,9 @@ module.exports = async (client, interaction) => {
     }
     if(interaction.customId === 'bookClub'){
       await assignRoles(interaction ,"1153201018323095662");
+    }
+    if(interaction.customId === 'bookSearch'){
+      await displayBookCollection(interaction);
     }
 
 

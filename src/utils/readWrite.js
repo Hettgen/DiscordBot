@@ -54,12 +54,19 @@ async function readUserSubmissions(userId) {
   }
 }
 // This one will be for finding the actual books and if they are active or not
-async function findBooksActive(userId){
+async function changeBookStatus(bookName, userId, value){
   try {
-    
-    return 
+    const book = await Book.findOne({
+      userID : userId,
+      bookName : bookName
+    });
+
+    console.log(`Status of ${bookName} updated to ${value}`);
+    book.isActive = value;
+    await book.save();
+
   } catch (error) {
-    console.log('Error finding books: ', error);
+    console.log('Error finding book: ', error);
   }
 }
 
@@ -68,7 +75,7 @@ async function addBookSubmission(bookName, userId) {
     const bookSubmission = new Book({
       userID : userId,
       bookName : bookName,
-      isActive : true
+      isActive : false
     });
     await bookSubmission.save();
   } catch (error) {
@@ -76,27 +83,39 @@ async function addBookSubmission(bookName, userId) {
   }
 }
 
-async function chooseBook(userId){
-  try {
+// async function chooseBook(userId){
+//   try {
     
-  } catch (error) {
-    console.log('Error choosing book: ', error);
-  }
-}
+//   } catch (error) {
+//     console.log('Error choosing book: ', error);
+//   }
+// }
 
+async function selectBookProposal(userId){
+  try {
+    const hasSubmission = hasActiveSubmission(userId);
+    if(hasSubmission != null){
+      
+    }
+
+  } catch (error) {
+    
+  }
+} 
 
 
 async function hasActiveSubmission(userId) {
   try {
-    const activeSubmission = await BookSubmission.findOne({
+    const activeSubmission = await x.findOne({
       'books.userID': userId,
-      'books.status': 'pending', // Assuming 'pending' status means the book is not yet read and the session is active
-      endDate: { $gt: new Date().toISOString() } // Checks if the Submission round hasn't ended
+      'books.isActive': 'true',
+      // endDate: { $gt: new Date().toISOString() } 
     });
-    return activeSubmission !== null;
+    console.log('active submission: ', activeSubmission);
+    return activeSubmission;
   } catch (error) {
     console.error('Error checking active submission:', error);
-    return false;
+    return [];
   }
 }
 
@@ -111,5 +130,6 @@ module.exports = {
   readUserSubmissions,
   writeUserSubmission,
   addBookSubmission,
-  hasActiveSubmission
+  hasActiveSubmission,
+  changeBookStatus
 }

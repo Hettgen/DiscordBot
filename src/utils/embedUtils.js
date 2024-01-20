@@ -1,20 +1,29 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, AttachmentBuilder } = require('discord.js');
+const { readUserSubmissions } = require('./readWrite');
 
 async function bookClubInfo(interaction, monthValue){
   try {
     const embed = new EmbedBuilder()
-    .setTitle("Book Club")
-    .setDescription("Treehouse Book Club!")
+    .setTitle("Treehouse Book Club")
+    .setDescription("This is the treehouse book club. Feel free to join by running /register and signing up for the book club role.")
+    .setImage('attachment://bookclub.png')
     .addFields({name: 'Months Running', value: monthValue.toString() });
 
     const row = new ActionRowBuilder()
     .addComponents(
       new ButtonBuilder()
       .setCustomId('bookVote')
-      .setLabel('Vote for your book!')
+      .setLabel('Add a book')
+      .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+      .setCustomId('bookSearch')
+      .setLabel('Browse your books')
       .setStyle(ButtonStyle.Primary)
     );
-    interaction.reply({ embeds: [embed], components : [row]});
+    // Image attachment
+    const file = new AttachmentBuilder('src/Icons/bookclub.png', { name: 'bookclub.png' });
+    
+    interaction.reply({ embeds: [embed], components : [row], files : [file]});
   
   } catch (error) {
     console.log(error);  
@@ -47,6 +56,7 @@ async function roleSelector(interaction){
     console.log('error in roleSelector.js', error);
   }
 }
+
 
 // Old displaybooks
 // async function displayBooks(books){
@@ -97,12 +107,52 @@ function truncateString(str, num) {
   return str.slice(0, num) + '...';
 }
 
-// Modal Search 
+async function displayBookCollection(interaction){
+  const userId = interaction.user.id;
 
+  const books = await readUserSubmissions(userId);
+
+  if(!books || books.length === 0 || !Array.isArray(books)){
+    interaction.reply({content : 'No books found.',
+    ephemeral : true});
+    return;
+  }
+
+  console.log(books);
+
+  // const options = books.map((books, index) => ({
+  // label : book,
+  // value : `book${index}`,
+  // }));
+
+  const options = books.map((book, index) => {
+    return {
+      label: book,
+      value: `book-${index}`
+    };
+  });
+  
+  console.log(options);
+
+  const selectMenu = new StringSelectMenuBuilder()
+  .setCustomId('bookProposalMenu')
+  .setPlaceholder('Select a book')
+  .addOptions(options.slice(0,25));
+
+  const row = new ActionRowBuilder().addComponents(selectMenu);
+
+  await interaction.reply({ content : 'Choose a book you want to suggest next', components : [row]});
+}
+
+
+// const options = books.map((books, index) => ({
+//   label : (book.title)
+// }));
 
 
 module.exports = {
   bookClubInfo,
   createBookSelectionMenu,
   roleSelector,
+  displayBookCollection
 };
