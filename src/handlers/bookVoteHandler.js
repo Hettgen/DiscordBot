@@ -10,14 +10,12 @@ const { searchResultsCache } = require('../utils/sharedData');
 // Define the 'execute' function
 async function handleBookVote(interaction) {
   const userId = interaction.user.id;
-  const activeSubmission = hasActiveSubmission;
+  // const activeSubmission = hasActiveSubmission;
 
-  if(await activeSubmission[userId]){
-    await interaction.reply({content: 'You have already submitted a book.', ephemeral: true});
-  } else {
+
     const modal = createBookSearchModal();
     await interaction.showModal(modal);
-  }
+  
 }
 
 // Define the 'handleModalSubmit' function

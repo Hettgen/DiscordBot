@@ -16,8 +16,12 @@ async function bookClubInfo(interaction, monthValue){
       .setLabel('Add a book')
       .setStyle(ButtonStyle.Primary),
       new ButtonBuilder()
+      .setCustomId('bookDelete')
+      .setLabel('Delete a book')
+      .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
       .setCustomId('bookSearch')
-      .setLabel('Browse your books')
+      .setLabel('Browse books')
       .setStyle(ButtonStyle.Primary)
     );
     // Image attachment
@@ -83,11 +87,18 @@ async function roleSelector(interaction){
 // }
 
 function createBookSelectionMenu(books) {
+
+
   const options = books.map((book, index )=> ({
     label: truncateString(book.title, 100), // Truncate to fit the limit
     description: truncateString(book.author_name ? book.author_name.join(', ') : 'Unknown', 50),
-    value: `book-${index}-${truncateString(book.title,75)}` // Or any unique identifier for the book
+    value: truncateString(`book-${index}-${book.title,75}`, 100) // Or any unique identifier for the book
   }));
+
+  // options.forEach(option =>{
+  //   option.value = truncateString(option.value,75);
+  // });
+  
 
   const selectMenu = new StringSelectMenuBuilder()
     .setCustomId('selectBook')
@@ -104,10 +115,10 @@ function truncateString(str, num) {
   if (str.length <= num) {
     return str;
   }
-  return str.slice(0, num) + '...';
+  return str.slice(0, num-3) + '...';
 }
 
-async function displayBookCollection(interaction){
+async function displayBookCollection(interaction, type){
   const userId = interaction.user.id;
 
   const books = await readUserSubmissions(userId);
@@ -118,7 +129,7 @@ async function displayBookCollection(interaction){
     return;
   }
 
-  console.log(books);
+  //console.log(books);
 
   // const options = books.map((books, index) => ({
   // label : book,
@@ -132,16 +143,29 @@ async function displayBookCollection(interaction){
     };
   });
   
-  console.log(options);
+  //console.log(options);
 
   const selectMenu = new StringSelectMenuBuilder()
-  .setCustomId('bookProposalMenu')
   .setPlaceholder('Select a book')
   .addOptions(options.slice(0,25));
 
+  if(type === 'propose'){
+    selectMenu.setCustomId('bookProposalMenu');
+  }
+  if(type === 'delete'){
+    selectMenu.setCustomId('bookDeletionMenu');
+  }
+
   const row = new ActionRowBuilder().addComponents(selectMenu);
 
-  await interaction.reply({ content : 'Choose a book you want to suggest next', components : [row]});
+  if(type === 'propose'){
+    await interaction.reply({ content : 'Choose a book you want to suggest next', components : [row]});
+  }
+  if(type === 'delete'){
+    await interaction.reply({ content : 'Choose the book you want to remove', components : [row]});
+  }
+
+  // await interaction.reply({ content : 'Choose a book you want to suggest next', components : [row]});
 }
 
 

@@ -1,4 +1,4 @@
-const {handleBookSelection, handleBookProposal} = require('../../utils/searchUtils');
+const {handleBookSelection, handleBookProposal, handleBookDeletion} = require('../../utils/searchUtils');
 
 module.exports = async (client, interaction) => {
   if (interaction.isStringSelectMenu()) {
@@ -8,7 +8,11 @@ module.exports = async (client, interaction) => {
     }
     if(interaction.customId === 'bookProposalMenu'){
       await handleBookProposal(interaction);
-      console.log('Book proposal');
+      console.log('Proposing Book');
+    }
+    if(interaction.customId === 'bookDeletionMenu'){
+      await handleBookDeletion(interaction);
+      console.log('Deleted Book')
     }
   }
   // Handle other select menu interactions...

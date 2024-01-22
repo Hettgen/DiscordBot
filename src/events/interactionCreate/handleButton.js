@@ -36,8 +36,12 @@ module.exports = async (client, interaction) => {
       await assignRoles(interaction ,"1153201018323095662");
     }
     if(interaction.customId === 'bookSearch'){
-      await displayBookCollection(interaction);
+      await displayBookCollection(interaction, 'propose');
     }
+    if(interaction.customId === 'bookDelete'){
+      await displayBookCollection(interaction, 'delete')
+    }
+
 
 
   }

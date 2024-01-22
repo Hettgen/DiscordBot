@@ -1,6 +1,6 @@
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const { searchResultsCache } = require('./sharedData'); 
-const { writeUserSubmission, hasActiveSubmission, changeBookStatus} = require('./readWrite');
+const { writeUserSubmission, hasActiveSubmission, changeBookStatus, readUserSubmissions, deleteBook} = require('./readWrite');
 
 
 function createBookSearchModal(){
@@ -22,7 +22,7 @@ function createBookSearchModal(){
 
 
 async function handleBookSelection(interaction) {
-  console.log('searchUtils.js : handling book selection');
+  //console.log('searchUtils.js : handling book selection');
   const selectedValue = interaction.values[0];
   const selectBookIndex = selectedValue.split('-')[1];
   const userId = interaction.user.id;
@@ -63,14 +63,32 @@ async function handleBookProposal(interaction){
   try {
     const userId = interaction.user.id;
 
-    const hasSubmission = await hasActiveSubmission(userId);
-    console.log('its being printed here' ,hasSubmission);
+    const selectedValue = interaction.values[0];
+    const selectedIndex = selectedValue.split('-')[1];
+    const userBooks = await readUserSubmissions(userId);
+    const selectedBookTitle = userBooks[selectedIndex];
 
-    if(hasActiveSubmission != null){
-      await changeBookStatus(hasSubmission, userId, false);
-      console.log(hasSubmission);
+    const hasSubmission = await hasActiveSubmission(userId);
+    console.log('Selected Value: ',selectedBookTitle);
+    
+    await interaction.deferReply();
+
+    if(hasSubmission[0] === selectedBookTitle){
+      await interaction.editReply({content : 'You have already selected this book', ephemeral : true});
+      return;
     }
 
+    if(hasSubmission.length > 0 && hasSubmission[0] != selectedBookTitle){
+      await changeBookStatus(hasSubmission, userId, false);
+      await interaction.editReply({content : 'Selected book replaced', ephemeral : true});
+      //console.log(hasSubmission);
+    }
+    else{
+      await changeBookStatus(selectedBookTitle, userId, true);
+      await interaction.editReply({content : 'Book selected', ephemeral : true});
+    }
+    
+    
 
     // console.log('nothing found for you');
   } catch (error) {
@@ -78,8 +96,40 @@ async function handleBookProposal(interaction){
   }
 }
 
+async function handleBookDeletion(interaction){
+  try {
+    const userId = interaction.user.id;
+
+    const selectedValue = interaction.values[0];
+    const selectedIndex = selectedValue.split('-')[1];
+    const userBooks = await readUserSubmissions(userId);
+    const bookTitle = userBooks[selectedIndex];
+
+
+    console.log('Selected Value: ',bookTitle);
+    
+    await interaction.deferReply();
+
+    if(bookTitle === null){
+      await interaction.editReply({content : 'Didnt find shit, your shit borken',
+      ephemeral : true});
+      return;
+    }
+
+    await deleteBook(userId, bookTitle);
+    await interaction.editReply({content: 'Book sucessfully deleted',
+    ephemeral : true});
+
+    // console.log('nothing found for you');
+  } catch (error) {
+    console.log('error in handleBookDeletion : searchUtils.js: ', error);
+  }
+}
+
+
 module.exports = {
   createBookSearchModal,
   handleBookSelection,
   handleBookProposal,
+  handleBookDeletion
 }

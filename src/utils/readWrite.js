@@ -61,10 +61,12 @@ async function changeBookStatus(bookName, userId, value){
       bookName : bookName
     });
 
-    console.log(`Status of ${bookName} updated to ${value}`);
-    book.isActive = value;
-    await book.save();
-
+    if(book){
+      book.isActive = value;
+      await book.save();
+      console.log(`Status of ${bookName} updated to ${value}`);
+    }
+    
   } catch (error) {
     console.log('Error finding book: ', error);
   }
@@ -91,33 +93,49 @@ async function addBookSubmission(bookName, userId) {
 //   }
 // }
 
-async function selectBookProposal(userId){
+async function deleteBook(userId, bookName){
   try {
-    const hasSubmission = hasActiveSubmission(userId);
-    if(hasSubmission != null){
-      
+    const book = await Book.findOne({
+      userID : userId,
+      bookName : bookName,
+    });
+    if(book){
+      console.log(`Book '${bookName}' found in deleteBook().`);
+
+      await book.deleteOne();
+
+      await User.updateOne(
+        { userID: userId },
+        { $pull: { submittedBooks: bookName } }
+      );
+      console.log(`Removed '${bookName}' from user and book.`);
+
+
     }
 
   } catch (error) {
-    
+    console.log('error deleting book : readWrite.js: ', error);
   }
 } 
 
 
 async function hasActiveSubmission(userId) {
   try {
-    const activeSubmission = await x.findOne({
-      'books.userID': userId,
-      'books.isActive': 'true',
+    const activeSubmissions = await Book.find({
+      userID : userId,
+      isActive : true,
       // endDate: { $gt: new Date().toISOString() } 
     });
-    console.log('active submission: ', activeSubmission);
-    return activeSubmission;
+    //console.log('active submissions: ', activeSubmissions);
+    const bookNames = activeSubmissions.map(submission => submission.bookName);
+    return bookNames;
   } catch (error) {
     console.error('Error checking active submission:', error);
     return [];
   }
 }
+
+
 
 
 
@@ -131,5 +149,6 @@ module.exports = {
   writeUserSubmission,
   addBookSubmission,
   hasActiveSubmission,
-  changeBookStatus
+  changeBookStatus,
+  deleteBook
 }
