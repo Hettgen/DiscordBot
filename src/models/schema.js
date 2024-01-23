@@ -12,6 +12,7 @@ const BookSchema = new mongo.Schema({
     userID : String,
     bookName : String, 
     isActive : Boolean,
+    wasSubmitted : Boolean,
 });
 
 const User = mongo.model('User', UserSchema);

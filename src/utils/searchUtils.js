@@ -1,6 +1,6 @@
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const { searchResultsCache } = require('./sharedData'); 
-const { writeUserSubmission, hasActiveSubmission, changeBookStatus, readUserSubmissions, deleteBook} = require('./readWrite');
+const { writeUserSubmission, hasActiveSubmission, changeBookStatus, readUserSubmissions, deleteBook, getActiveBooks, checkAlreadySubmitted} = require('./readWrite');
 
 
 function createBookSearchModal(){
@@ -73,6 +73,11 @@ async function handleBookProposal(interaction){
     
     await interaction.deferReply();
 
+    if(checkAlreadySubmitted(userId, selectedBookTitle)){
+      await interaction.reply('This book was already submitted, re-submissions are now allowed');
+      return;
+    }
+
     if(hasSubmission[0] === selectedBookTitle){
       await interaction.editReply({content : 'You have already selected this book', ephemeral : true});
       return;
@@ -126,10 +131,27 @@ async function handleBookDeletion(interaction){
   }
 }
 
+async function selectMonthlyBook(){
+  
+  const books = await getActiveBooks();
+  
+  const randomIndex = Math.floor(Math.random() * books.length);
+
+  console.log(books[randomIndex]);
+
+
+  // try {
+    
+  // } catch (error) {
+  //   console.log('Error in selectMonthlyBook: searchUtils.js: ', error);
+  // }
+}
+
 
 module.exports = {
   createBookSearchModal,
   handleBookSelection,
   handleBookProposal,
-  handleBookDeletion
+  handleBookDeletion,
+  selectMonthlyBook
 }

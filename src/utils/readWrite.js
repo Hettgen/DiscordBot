@@ -61,7 +61,7 @@ async function changeBookStatus(bookName, userId, value){
       bookName : bookName
     });
 
-    if(book){
+    if(book ){
       book.isActive = value;
       await book.save();
       console.log(`Status of ${bookName} updated to ${value}`);
@@ -72,12 +72,32 @@ async function changeBookStatus(bookName, userId, value){
   }
 }
 
+async function checkAlreadySubmitted(userId, bookName){
+  try {
+    const book = await Book.findOne({
+      userID : userId,
+      bookName : bookName,
+      wasSubmitted : true,
+    });
+
+    if(book != null){
+      return true;
+    }
+    else{
+      return false;
+    }
+  } catch (error) {
+    console.log('error in checkAlreadySubmitted, readWrite.js: ', error);
+  }
+}
+
 async function addBookSubmission(bookName, userId) {
   try {
     const bookSubmission = new Book({
       userID : userId,
       bookName : bookName,
-      isActive : false
+      isActive : false,
+      wasSubmitted : false,
     });
     await bookSubmission.save();
   } catch (error) {
@@ -135,7 +155,24 @@ async function hasActiveSubmission(userId) {
   }
 }
 
+async function getActiveBooks(){
 
+  try {
+    const activeBooks = await Book.find({
+      isActive : true,
+    });
+  
+    if(activeBooks.length === 0){
+      console.log('No active books found');
+      return null;
+    }
+  
+    return activeBooks;
+  } catch (error) {
+    console.log('error in getActiveBooks, readWrite.js: ', error);
+  }
+  
+}
 
 
 
@@ -150,5 +187,7 @@ module.exports = {
   addBookSubmission,
   hasActiveSubmission,
   changeBookStatus,
-  deleteBook
+  deleteBook,
+  getActiveBooks,
+  checkAlreadySubmitted
 }

@@ -1,6 +1,7 @@
 const {handleBookVote, handleModalSubmit} = require('../../handlers/bookVoteHandler');
 const {assignRoles} = require('../../handlers/roleHandler');
-const {displayBookCollection} = require('../../utils/embedUtils')
+const {displayBookCollection} = require('../../utils/embedUtils');
+const {selectMonthlyBook} = require('../../utils/searchUtils');
 
 const roles = [
   { 
@@ -40,6 +41,9 @@ module.exports = async (client, interaction) => {
     }
     if(interaction.customId === 'bookDelete'){
       await displayBookCollection(interaction, 'delete')
+    }
+    if(interaction.customId === 'start'){
+      await selectMonthlyBook();
     }
 
 

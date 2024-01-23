@@ -20,6 +20,10 @@ async function bookClubInfo(interaction, monthValue){
       .setLabel('Delete a book')
       .setStyle(ButtonStyle.Primary),
       new ButtonBuilder()
+      .setCustomId('start')
+      .setLabel('startStuff')
+      .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
       .setCustomId('bookSearch')
       .setLabel('Browse books')
       .setStyle(ButtonStyle.Primary)
