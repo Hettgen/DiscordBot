@@ -66,29 +66,6 @@ async function roleSelector(interaction){
 }
 
 
-// Old displaybooks
-// async function displayBooks(books){
-//   return books.map(book => {
-//     const embed = new EmbedBuilder()
-//     .setTitle(book.title)
-//     .setURL(`https://openlibrary.org${book.key}`)
-//     .setDescription(`Author: ${book.author_name ? book.author_name.join(', ') : 'Unknown'}`)
-//     .addFields(
-//       { 
-//         name: 'First Publish Year',
-//         value: book.first_publish_year ? book.first_publish_year.toString() : 'Unknown',
-//         inline: true
-//       }
-//     )
-//     .setColor(0x1D82B6);
-
-//     if(book.cover_i){
-//       embed.setThumbnail(`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`);
-//     }
-
-//     return embed;
-//   });
-// }
 
 function createBookSelectionMenu(books) {
 
@@ -173,9 +150,6 @@ async function displayBookCollection(interaction, type){
 }
 
 
-// const options = books.map((books, index) => ({
-//   label : (book.title)
-// }));
 
 
 module.exports = {

@@ -46,8 +46,16 @@ async function writeUserSubmission(userId, username, bookName) {
 // This one just reads book names and returns for display
 async function readUserSubmissions(userId) {
   try {
-    const user = await User.findOne({ userID: userId });
-    return user ? user.submittedBooks : [];
+    const books = await Book.find({
+      userID : userId,
+      wasSubmitted : false
+    });
+
+    const bookNames = books.map(book => book.bookName);
+
+
+    // const user = await User.findOne({ userID: userId});
+    return books ? bookNames : [];
   } catch (error) {
     console.error('Error reading user submissions:', error);
     return [];
@@ -60,8 +68,13 @@ async function changeBookStatus(bookName, userId, value){
       userID : userId,
       bookName : bookName
     });
+    const alreadySubmitted = checkAlreadySubmitted(userId, bookName);
+    if(alreadySubmitted){
+      console.log('stopping because book was already submitted');
+      return;
+    }
 
-    if(book ){
+    if(book){
       book.isActive = value;
       await book.save();
       console.log(`Status of ${bookName} updated to ${value}`);
