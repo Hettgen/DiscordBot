@@ -68,7 +68,8 @@ async function changeBookStatus(bookName, userId, value){
       userID : userId,
       bookName : bookName
     });
-    const alreadySubmitted = checkAlreadySubmitted(userId, bookName);
+    const alreadySubmitted = await checkAlreadySubmitted(userId, bookName);
+
     if(alreadySubmitted){
       console.log('stopping because book was already submitted');
       return;
@@ -187,12 +188,12 @@ async function getActiveBooks(){
   
 }
 
-
-
-
-async function assignSubmissionId(){
-
+async function setBookSelected(userId, bookName){
+  
 }
+
+
+
 
 module.exports = {
   readUserSubmissions,

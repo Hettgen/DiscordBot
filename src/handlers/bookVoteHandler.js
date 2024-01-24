@@ -20,8 +20,8 @@ async function handleBookVote(interaction) {
 
 // Define the 'handleModalSubmit' function
 async function handleModalSubmit(interaction) {
-  const searchQuery = interaction.fields.getTextInputValue('bookSearchInput');
-
+  const inputQuery = interaction.fields.getTextInputValue('bookSearchInput');
+  const searchQuery = truncateString(inputQuery, 25);
   await interaction.deferReply({ephemeral : true});
 
   try {
@@ -34,6 +34,13 @@ async function handleModalSubmit(interaction) {
     console.error('Error in bookVoteHandler.js:', error);
     await interaction.editReply({content: 'An error occurred during the book search.', ephemeral: true});
   }
+}
+
+function truncateString(str, num) {
+  if (str.length <= num) {
+    return str;
+  }
+  return str.slice(0, num-3) + '...';
 }
 
 // Export the module

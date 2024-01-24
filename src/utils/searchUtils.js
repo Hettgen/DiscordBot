@@ -72,11 +72,13 @@ async function handleBookProposal(interaction){
     console.log('Selected Value: ',selectedBookTitle);
     
     await interaction.deferReply();
+    const alreadySubmitted = await checkAlreadySubmitted(userId, selectedBookTitle);
 
-    if(checkAlreadySubmitted(userId, selectedBookTitle)){
-      await interaction.reply('This book was already submitted, re-submissions are now allowed');
+    if(alreadySubmitted){
+      await interaction.editReply('This book was already submitted, re-submissions are not allowed');
       return;
     }
+
 
     if(hasSubmission[0] === selectedBookTitle){
       await interaction.editReply({content : 'You have already selected this book', ephemeral : true});
@@ -92,8 +94,8 @@ async function handleBookProposal(interaction){
       await changeBookStatus(selectedBookTitle, userId, true);
       await interaction.editReply({content : 'Book selected', ephemeral : true});
     }
-    
-    
+
+
 
     // console.log('nothing found for you');
   } catch (error) {
@@ -139,12 +141,6 @@ async function selectMonthlyBook(){
 
   console.log(books[randomIndex]);
 
-
-  // try {
-    
-  // } catch (error) {
-  //   console.log('Error in selectMonthlyBook: searchUtils.js: ', error);
-  // }
 }
 
 

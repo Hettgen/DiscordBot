@@ -38,6 +38,19 @@ async function bookClubInfo(interaction, monthValue){
   }
 }
 
+async function displayMonthlyBook(interaction, bookName, image){
+  try {
+    const embed = new EmbedBuilder()
+    .setTitle('Book of the Month')
+    .setDescription(bookName)
+    .setImage('');
+
+
+  } catch (error) {
+    
+  }
+}
+
 async function roleSelector(interaction){
   try {
     const embed = new EmbedBuilder()
@@ -148,6 +161,7 @@ async function displayBookCollection(interaction, type){
 
   // await interaction.reply({ content : 'Choose a book you want to suggest next', components : [row]});
 }
+
 
 
 
