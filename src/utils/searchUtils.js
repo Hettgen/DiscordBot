@@ -1,6 +1,6 @@
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const { searchResultsCache } = require('./sharedData'); 
-const { writeUserSubmission, hasActiveSubmission, changeBookStatus, readUserSubmissions, deleteBook, getActiveBooks, checkAlreadySubmitted} = require('./readWrite');
+const { writeUserSubmission, hasActiveSubmission, changeBookStatus, readUserSubmissions, deleteBook, getActiveBooks, checkAlreadySubmitted, setBookSelected} = require('./readWrite');
 
 
 function createBookSearchModal(){
@@ -138,9 +138,16 @@ async function selectMonthlyBook(){
   const books = await getActiveBooks();
   
   const randomIndex = Math.floor(Math.random() * books.length);
-
-  console.log(books[randomIndex]);
-
+  const selectedBook = books[randomIndex];
+  try {
+    setBookSelected(selectedBook);
+  
+    console.log('selectMonthlyBook, searchUtils.js: ', selectedBook);
+    return selectedBook
+  
+  } catch (error) {
+    
+  }
 }
 
 

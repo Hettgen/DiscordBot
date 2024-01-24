@@ -43,7 +43,7 @@ module.exports = async (client, interaction) => {
       await displayBookCollection(interaction, 'delete')
     }
     if(interaction.customId === 'start'){
-      await selectMonthlyBook();
+      //await selectMonthlyBook();
     }
 
 

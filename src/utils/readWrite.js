@@ -86,6 +86,23 @@ async function changeBookStatus(bookName, userId, value){
   }
 }
 
+async function setBookSelected(book){
+  try {
+
+
+    const foundBook = await Book.findOne(book);
+    if(foundBook){
+      foundBook.wasSubmitted = true;
+      await book.save();
+      console.log(`setting ${foundBook.bookName} as selected`);
+    }
+
+  } catch (error) {
+    console.log('error in setBookSelection, readWrite.js: ', error);
+  }
+}
+
+
 async function checkAlreadySubmitted(userId, bookName){
   try {
     const book = await Book.findOne({
@@ -188,10 +205,6 @@ async function getActiveBooks(){
   
 }
 
-async function setBookSelected(userId, bookName){
-  
-}
-
 
 
 
@@ -203,5 +216,6 @@ module.exports = {
   changeBookStatus,
   deleteBook,
   getActiveBooks,
-  checkAlreadySubmitted
+  checkAlreadySubmitted,
+  setBookSelected
 }
