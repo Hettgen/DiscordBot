@@ -1,6 +1,6 @@
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const { searchResultsCache } = require('./sharedData'); 
-const { writeUserSubmission, hasActiveSubmission, changeBookStatus, readUserSubmissions, deleteBook, getActiveBooks, checkAlreadySubmitted, setBookSelected} = require('./readWrite');
+const { writeUserSubmission, hasActiveSubmission, changeBookStatus, readUserSubmissions, deleteBook, getActiveBooks, checkAlreadySubmitted, setBookSelected, createBookClubSession, checkActiveSession} = require('./readWrite');
 
 
 function createBookSearchModal(){
@@ -70,6 +70,7 @@ async function handleBookProposal(interaction){
 
     const hasSubmission = await hasActiveSubmission(userId);
     console.log('Selected Value: ',selectedBookTitle);
+    const isActive = await checkActiveSession();
     
     await interaction.deferReply();
     const alreadySubmitted = await checkAlreadySubmitted(userId, selectedBookTitle);
@@ -85,8 +86,14 @@ async function handleBookProposal(interaction){
       return;
     }
 
+    if(isActive){
+      await interaction.editReply({content : 'Cannot change status during active book club session', ephemeral : true});
+      return;z
+    }
+
     if(hasSubmission.length > 0 && hasSubmission[0] != selectedBookTitle){
       await changeBookStatus(hasSubmission, userId, false);
+      await changeBookStatus(selectedBookTitle, userId, true);
       await interaction.editReply({content : 'Selected book replaced', ephemeral : true});
       //console.log(hasSubmission);
     }
@@ -136,19 +143,24 @@ async function handleBookDeletion(interaction){
 async function selectMonthlyBook(){
   
   const books = await getActiveBooks();
+  // console.log(books);
   
-  const randomIndex = Math.floor(Math.random() * books.length);
-  const selectedBook = books[randomIndex];
+  
   try {
-    setBookSelected(selectedBook);
-  
-    console.log('selectMonthlyBook, searchUtils.js: ', selectedBook);
-    return selectedBook
+    if(!books){
+      return 0;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * books.length);
+    const selectedBook = books[randomIndex];
+    //console.log('selectMonthlyBook, searchUtils.js: ', selectedBook);
+    return selectedBook;
   
   } catch (error) {
-    
+    console.log('error in selectMonthlyBook, searchUtils.js: ', error);
   }
 }
+
 
 
 module.exports = {
@@ -156,5 +168,5 @@ module.exports = {
   handleBookSelection,
   handleBookProposal,
   handleBookDeletion,
-  selectMonthlyBook
+  selectMonthlyBook,
 }

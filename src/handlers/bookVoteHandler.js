@@ -28,7 +28,7 @@ async function handleModalSubmit(interaction) {
     const books = await searchBooks(searchQuery);
     searchResultsCache.set(interaction.user.id, books);
 
-    const selectionMenu = createBookSelectionMenu(books);
+    const selectionMenu = await createBookSelectionMenu(books, interaction);
     await interaction.editReply({content: 'Select a Book', components: [selectionMenu], ephemeral: true});
   } catch (error) {
     console.error('Error in bookVoteHandler.js:', error);

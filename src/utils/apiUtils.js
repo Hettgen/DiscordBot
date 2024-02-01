@@ -10,7 +10,11 @@ async function searchBooks(query) {
   }
 }
 
+async function getImage(bookName){
+  
+}
 
 module.exports = {
   searchBooks,
+  getImage
 };

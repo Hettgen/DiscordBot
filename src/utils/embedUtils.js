@@ -3,6 +3,7 @@ const { readUserSubmissions } = require('./readWrite');
 
 async function bookClubInfo(interaction, monthValue){
   try {
+
     const embed = new EmbedBuilder()
     .setTitle("Treehouse Book Club")
     .setDescription("This is the treehouse book club. Feel free to join by running /register and signing up for the book club role.")
@@ -20,34 +21,38 @@ async function bookClubInfo(interaction, monthValue){
       .setLabel('Delete a book')
       .setStyle(ButtonStyle.Primary),
       new ButtonBuilder()
-      .setCustomId('start')
-      .setLabel('startStuff')
-      .setStyle(ButtonStyle.Primary),
-      new ButtonBuilder()
       .setCustomId('bookSearch')
-      .setLabel('Browse books')
+      .setLabel('Select Book')
       .setStyle(ButtonStyle.Primary)
     );
     // Image attachment
     const file = new AttachmentBuilder('src/Icons/bookclub.png', { name: 'bookclub.png' });
     
-    interaction.reply({ embeds: [embed], components : [row], files : [file]});
+    await interaction.reply({ embeds: [embed], components : [row], files : [file]});
   
   } catch (error) {
     console.log(error);  
   }
 }
 
-async function displayMonthlyBook(interaction, bookName, image){
+async function displayMonthlyBook(client, bookName, username){
   try {
+    const description = bookName + " As suggested by " + username;
     const embed = new EmbedBuilder()
     .setTitle('Book of the Month')
-    .setDescription(bookName)
-    .setImage('');
+    .setDescription(description)
+    .setImage('attachment://bookclub.png');
 
+    const file = new AttachmentBuilder('src/Icons/bookclub.png', { name: 'bookclub.png' });
+    channel = await client.channels.fetch('1200415387301457991');
+    if(!channel){
+      console.log('no channel found');
+      return;
+    }
+    await channel.send({ embeds : [embed], files : [file]});
 
   } catch (error) {
-    
+    console.log('error in displayMonthlyBook, embedUtils.js: ', error);
   }
 }
 
@@ -80,7 +85,7 @@ async function roleSelector(interaction){
 
 
 
-function createBookSelectionMenu(books) {
+async function createBookSelectionMenu(books, interaction) {
 
 
   const options = books.map((book, index )=> ({
@@ -153,10 +158,10 @@ async function displayBookCollection(interaction, type){
   const row = new ActionRowBuilder().addComponents(selectMenu);
 
   if(type === 'propose'){
-    await interaction.reply({ content : 'Choose a book you want to suggest next', components : [row]});
+    await interaction.reply({ content : 'Choose a book you want to suggest next', components : [row], ephemeral : true});
   }
   if(type === 'delete'){
-    await interaction.reply({ content : 'Choose the book you want to remove', components : [row]});
+    await interaction.reply({ content : 'Choose the book you want to remove', components : [row], ephemeral : true});
   }
 
   // await interaction.reply({ content : 'Choose a book you want to suggest next', components : [row]});
@@ -170,5 +175,6 @@ module.exports = {
   bookClubInfo,
   createBookSelectionMenu,
   roleSelector,
-  displayBookCollection
+  displayBookCollection,
+  displayMonthlyBook
 };

@@ -15,8 +15,16 @@ const BookSchema = new mongo.Schema({
     wasSubmitted : Boolean,
 });
 
+
+const bookClubSessionSchema = new mongo.Schema({
+    books : [BookSchema],
+    isActive : Boolean,
+});
+
 const User = mongo.model('User', UserSchema);
 
 const Book = mongo.model('Book', BookSchema);
 
-module.exports = {User, Book};
+const BookClubSession = mongo.model('ClubSession', bookClubSessionSchema);
+
+module.exports = {User, Book, BookClubSession};

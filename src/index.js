@@ -32,9 +32,9 @@ const client = new Client({
 //   client.commands.set(command.name, command);
 // }
 
-cron.schedule('0 0 1 * *', () => {
-  //selectAndAnnounceBook();
-});
+// cron.schedule('0 0 1 * *', () => {
+//   selectAndAnnounceBook();
+// });
 const roles = [
   {
     id : '1153201018323095662',
@@ -61,56 +61,6 @@ client.on('messageCreate', (message) => {
   }
 });
 
-// client.on('interactionCreate', async (interaction) => {
-  
-  // if (interaction.isChatInputCommand()){
-  //   const command = client.commands.get(interaction.commandName);
-  //   console.log(command);
-
-  //   if(!command) return;
-  //   try {
-  //     await command.execute(interaction);
-  //   } catch (error) {
-  //     console.log(error);
-  //     await interaction.reply({content: 'Error executing comamnd. Please message creeper', ephemeral:true});
-  //   }
-  // }
-
-  // if (interaction.isStringSelectMenu()) {
-  //   if(interaction.customId === 'selectBook'){
-  //     await handleBookSelection(interaction);
-  //   }
-  // }
-
-  // if (interaction.isButton()){
-    
-    
-  //   if (interaction.customId === 'bookVote'){
-  //     const bookVoteCommand = client.commands.get('bookvote');
-  //       if(bookVoteCommand){
-  //         await bookVoteCommand.execute(interaction);
-  //       }
-  //   }
-  // }
-  
-  // if (interaction.isModalSubmit()){
-  //   if(interaction.customId === 'bookSearchModal'){
-  //     const bookVoteCommand = client.commands.get('bookvote');
-
-  //     if(bookVoteCommand && bookVoteCommand.handleModalSubmit){
-  //       try {
-  //         await bookVoteCommand.handleModalSubmit(interaction);
-  //       } catch (error) {
-  //         console.log(error);
-  //         await interaction.reply({content: 'Modal submit brokie. idk why :(', ephemeral:true});
-  //       }
-  //     }
-
-  //   }
-  // }
-  
-
-// });
     eventHandler(client);
 
 

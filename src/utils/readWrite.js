@@ -1,40 +1,21 @@
 const fs = require('fs');
 const path = require('path');
-const {User, Book} = require('../models/schema');
+const {User, Book, BookClubSession} = require('../models/schema');
 
-// const submissionFilePath = path.join(__dirname, 'userSubmissions.json');
 
-// function readUserSubmissions(){
-//   if (!fs.existsSync(submissionFilePath)) {
-//     fs.writeFileSync(submissionFilePath, JSON.stringify({}));
-//   }
-//   return JSON.parse(fs.readFileSync(submissionFilePath, 'utf-8'));
-// }
-
-// function writeUserSubmission(userId, bookName){
-  
-//   const submissions = readUserSubmissions();
-
-//   submissions[userId] = bookName;
-
-//   fs.writeFileSync(submissionFilePath, JSON.stringify(submissions, null, 2));
-// }
-
-// module.exports = {
-//   readUserSubmissions,
-//   writeUserSubmission,
-// }
 
 async function writeUserSubmission(userId, username, bookName) {
   try {
+
     let user = await User.findOne({ userID: userId });
     if (!user) {
+
       user = new User({ userID: userId, username: username, submittedBooks: [bookName] });
       addBookSubmission(bookName, userId);
     } else {
       if (!user.submittedBooks.includes(bookName)) {
         user.submittedBooks.push(bookName);
-        addBookSubmission(bookName, userId);
+        await addBookSubmission(bookName, userId);
       }
     }
     await user.save();
@@ -64,6 +45,14 @@ async function readUserSubmissions(userId) {
 // This one will be for finding the actual books and if they are active or not
 async function changeBookStatus(bookName, userId, value){
   try {
+
+    const isSessionActive = await checkActiveSession();
+    if(isSessionActive){
+      console.log('active session in progress, not running changeBookStatus, readWrite.js');
+      return;
+    }
+
+
     const book = await Book.findOne({
       userID : userId,
       bookName : bookName
@@ -86,15 +75,14 @@ async function changeBookStatus(bookName, userId, value){
   }
 }
 
-async function setBookSelected(book){
+async function setBookSelected(book, status){
   try {
-
 
     const foundBook = await Book.findOne(book);
     if(foundBook){
-      foundBook.wasSubmitted = true;
-      await book.save();
-      console.log(`setting ${foundBook.bookName} as selected`);
+      foundBook.wasSubmitted = status;
+      await foundBook.save();
+      console.log(`setting ${foundBook.bookName} selected status as ${status}`);
     }
 
   } catch (error) {
@@ -122,15 +110,30 @@ async function checkAlreadySubmitted(userId, bookName){
   }
 }
 
+// Sets book submissions to isActive
 async function addBookSubmission(bookName, userId) {
   try {
-    const bookSubmission = new Book({
-      userID : userId,
-      bookName : bookName,
-      isActive : false,
-      wasSubmitted : false,
-    });
-    await bookSubmission.save();
+    const activeSubmission = checkAlreadySubmitted(userId, bookName);
+
+
+    if(!activeSubmission){
+      const bookSubmission = new Book({
+        userID : userId,
+        bookName : bookName,
+        isActive : true,
+        wasSubmitted : false,
+      });
+      await bookSubmission.save();
+    }
+    else{
+      const bookSubmission = new Book({
+        userID : userId,
+        bookName : bookName,
+        isActive : false,
+        wasSubmitted : false,
+      });
+      await bookSubmission.save();
+    }
   } catch (error) {
     console.error('Error adding book Submission:', error);
   }
@@ -205,6 +208,63 @@ async function getActiveBooks(){
   
 }
 
+async function createBookClubSession(){
+  try {
+    const session = new BookClubSession({isActive : true});
+    await session.save();
+  } catch (error) {
+    console.log('Error in createBookClubSession, readWrite.js: ', error);
+  }
+}
+
+async function fillBookClubSession(book){
+  try {
+    const session = BookClubSession.findOne({isActive : true});
+    
+    if(!session){
+      console.log('session not found in fillBookClubSession, readWrite.js');
+      return;
+    }
+    else{
+      session.books.push(book);
+      await session.save();
+
+
+    }
+
+
+  } catch (error) {
+    console.log('error in fillBookClubSession, readWrite.js: ', error);
+  }
+}
+
+async function endBookClubSession(){
+  try {
+    let session = await BookClubSession.findOne({isActive : true});
+    if(!session){
+      console.log('error no session found, endBookClubSession, readWrite.js');
+      return;
+    }
+    else{
+      session.isActive = false;
+      await session.save();
+      console.log('Session sucessfully ended, endBookClubSession, readWrite.js');
+    }
+
+  } catch (error) {
+    console.log('error in endBookClubSession, readWrite.js: ', error);
+  }
+}
+
+async function checkActiveSession(){
+  try {
+    const isActive = await BookClubSession.findOne({isActive : true});
+    return isActive !== null;
+  } catch (error) {
+    console.log('error in checkActiveSession, readWrite.js: ', error);
+  }
+}
+
 
 
 
@@ -217,5 +277,9 @@ module.exports = {
   deleteBook,
   getActiveBooks,
   checkAlreadySubmitted,
-  setBookSelected
+  setBookSelected,
+  createBookClubSession,
+  fillBookClubSession,
+  endBookClubSession,
+  checkActiveSession
 }
