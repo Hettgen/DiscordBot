@@ -61,7 +61,9 @@ client.on('messageCreate', (message) => {
   }
 });
 
-    eventHandler(client);
+  eventHandler(client);
+
+  
 
 
 (async () => {

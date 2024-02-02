@@ -122,7 +122,7 @@ async function handleBookDeletion(interaction){
 
     console.log('Selected Value: ',bookTitle);
     
-    await interaction.deferReply();
+    await interaction.deferReply({ephemeral : true});
 
     if(bookTitle === null){
       await interaction.editReply({content : 'Didnt find shit, your shit borken',

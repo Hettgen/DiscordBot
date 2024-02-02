@@ -81,6 +81,7 @@ async function setBookSelected(book, status){
     const foundBook = await Book.findOne(book);
     if(foundBook){
       foundBook.wasSubmitted = status;
+      foundBook.isActive = false;
       await foundBook.save();
       console.log(`setting ${foundBook.bookName} selected status as ${status}`);
     }
@@ -113,7 +114,7 @@ async function checkAlreadySubmitted(userId, bookName){
 // Sets book submissions to isActive
 async function addBookSubmission(bookName, userId) {
   try {
-    const activeSubmission = checkAlreadySubmitted(userId, bookName);
+    const activeSubmission = await checkAlreadySubmitted(userId, bookName);
 
 
     if(!activeSubmission){
@@ -219,7 +220,7 @@ async function createBookClubSession(){
 
 async function fillBookClubSession(book){
   try {
-    const session = BookClubSession.findOne({isActive : true});
+    const session = await BookClubSession.findOne({isActive : true});
     
     if(!session){
       console.log('session not found in fillBookClubSession, readWrite.js');

@@ -40,17 +40,19 @@ async function displayMonthlyBook(client, bookName, username){
     const description = bookName + " As suggested by " + username;
     const embed = new EmbedBuilder()
     .setTitle('Book of the Month')
-    .setDescription(description)
-    .setImage('attachment://bookclub.png');
+    .setDescription(description);
 
     const file = new AttachmentBuilder('src/Icons/bookclub.png', { name: 'bookclub.png' });
-    channel = await client.channels.fetch('1200415387301457991');
+    channel = await client.channels.fetch('1197925438928986112');
     if(!channel){
       console.log('no channel found');
       return;
     }
-    await channel.send({ embeds : [embed], files : [file]});
-
+    
+    await channel.send({ embeds : [embed]});
+    const thread = await channel.threads.create({
+          name : bookName,
+        });
   } catch (error) {
     console.log('error in displayMonthlyBook, embedUtils.js: ', error);
   }
