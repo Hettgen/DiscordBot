@@ -41,7 +41,7 @@ async function displayMonthlyBook(client, bookName, username){
     const embed = new EmbedBuilder()
     .setTitle('Book of the Month')
     .setDescription(description);
-
+    
     const file = new AttachmentBuilder('src/Icons/bookclub.png', { name: 'bookclub.png' });
     channel = await client.channels.fetch('1197925438928986112');
     if(!channel){
