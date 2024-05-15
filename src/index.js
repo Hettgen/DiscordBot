@@ -63,13 +63,13 @@ client.on('messageCreate', (message) => {
 
   eventHandler(client);
 
-  
 
+console.log(process.env.MONGODB_URI);
 
 (async () => {
   
   try {
-    await mongoose.connect(process.env.MONGODB_URI, );
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log('connected to database');
 
     
